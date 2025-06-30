@@ -1,0 +1,59 @@
+CREATE TABLE Book (
+    id TEXT PRIMARY KEY,
+    title TEXT,
+    subtitle TEXT,
+    authors TEXT,
+    thumbnailUrl TEXT,
+    language TEXT,
+    description TEXT,
+    publisher TEXT,
+    publishedDate TEXT,
+    query TEXT
+);
+
+insertBook:
+INSERT OR REPLACE INTO Book(id, title, subtitle, authors, thumbnailUrl, language, description, publisher, publishedDate, query)
+VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM Book;
+
+selectByQuery:
+SELECT * FROM Book WHERE query = ?;
+
+selectById:
+SELECT * FROM Book WHERE id = ?;
+
+deleteAll:
+DELETE FROM Book;
+
+deleteAllByQuery:
+DELETE FROM Book WHERE query = ?;
+
+CREATE TABLE SearchHistory (
+    id TEXT PRIMARY KEY,
+    query TEXT,
+    searched_at TEXT NOT NULL
+);
+
+-- Insert a new search record
+insertSearch:
+INSERT INTO SearchHistory(query, searched_at)
+VALUES (?, ?);
+
+-- Get the most recent query (optional: limit to 1)
+selectLastQuery:
+SELECT query
+FROM SearchHistory
+ORDER BY searched_at DESC
+LIMIT 1;
+
+-- Get all queries ordered by time
+selectAllSearches:
+SELECT *
+FROM SearchHistory
+ORDER BY searched_at DESC;
+
+-- Delete all (optional)
+clearSearchHistory:
+DELETE FROM SearchHistory;
