@@ -21,12 +21,13 @@ Architecture**, **JetBrains Compose Multiplatform**, **Ktor**, **SQLDelight**, a
 ## 🧱 Architecture
 
 The project follows **Clean Architecture** principles:
-
+```
 shared/
 ├── application/ # Domain models & usecases
 ├── data/ # Repository, network and database layer
 ├── presentation/ # ViewModels & UI state management
 ├── di/ # Dependency injection using Koin
+```
 
 ### 🔄 Layer Breakdown
 
