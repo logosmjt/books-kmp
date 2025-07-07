@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class BookServiceImpl(private val httpClient: HttpClient): BookService {
-    private val apiKey = "AIzaSyC-2oG4tvXjDcRnxGj6SOHgW9vTl9GjkBA"
 
     override fun getBookDetail(id: String): Flow<Volume> = flow {
         emit(httpClient.get("https://www.googleapis.com/books/v1/volumes/$id").body())
