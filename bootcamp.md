@@ -1,50 +1,51 @@
-# Kotlin Multiplatform Bootcamp: 构建一个跨平台图书应用
 
-项目地址：[https://github.com/logosmjt/books-kmp](https://github.com/logosmjt/books-kmp)
+# Kotlin Multiplatform Bootcamp: Building a Cross-Platform Book App
 
----
-
-## 🧭 前言：为什么选择 Kotlin Multiplatform？
-
-Kotlin Multiplatform (KMP) 是 JetBrains 推出的技术栈，支持使用同一套 Kotlin 代码构建 Android、iOS、Web 等平台应用，最大化代码复用的同时保持平台特有体验。
-
-本教程以 `books-kmp` 项目为基础，带你一步步搭建一个支持 Android 和 iOS 的图书信息应用，涵盖：
-
-- KMP 项目结构设计
-- Compose Multiplatform UI
-- 数据持久化与同步
-- API 网络请求
-- DI 与 ViewModel 管理
-- 多平台构建与部署
+GitHub Repository: [https://github.com/logosmjt/books-kmp](https://github.com/logosmjt/books-kmp)
 
 ---
 
-## 📁 第一章：项目结构与架构设计
+## 🧭 Introduction: Why Kotlin Multiplatform?
+
+Kotlin Multiplatform (KMP), developed by JetBrains, enables developers to share common code across Android, iOS, Web, and more — maximizing code reuse while still allowing platform-specific experiences.
+
+This tutorial is based on the `books-kmp` project, guiding you through building a book browsing app that supports both Android and iOS. You'll learn:
+
+- KMP project structure design
+- Compose Multiplatform UI development
+- Data persistence and synchronization
+- API network integration
+- Dependency Injection and ViewModel setup
+- Cross-platform building and deployment
+
+---
+
+## 📁 Chapter 1: Project Structure & Architecture
 
 ```text
 books-kmp/
-├── androidApp/           // Android UI 层
-├── iosApp/               // iOS SwiftUI 项目（使用 CocoaPods）
-├── shared/               // Kotlin Multiplatform shared 模块
-│   ├── src/commonMain/   // 公共业务逻辑（model, usecase, repo, viewmodel）
-│   ├── src/androidMain/  // Android 特定实现（DB, Ktor 等）
-│   ├── src/iosMain/      // iOS 特定实现
+├── androidApp/           // Android UI layer
+├── iosApp/               // iOS SwiftUI project (using CocoaPods)
+├── shared/               // Kotlin Multiplatform shared module
+│   ├── src/commonMain/   // Shared business logic (models, usecases, repositories, viewmodels)
+│   ├── src/androidMain/  // Android-specific implementations (DB, Ktor, etc.)
+│   ├── src/iosMain/      // iOS-specific implementations
 ├── build.gradle.kts
 └── libs.versions.toml
 ```
 
-使用 **Clean Architecture**，模块划分如下：
+The project follows **Clean Architecture**, with the following layers:
 
-- **application/**: 业务模型、usecase
-- **data/**: repository、datasource、service（API）
-- **presentation/**: ViewModel 与 UI 层
-- **di/**: Koin 依赖注入模块
+- **application/**: business models and usecases
+- **data/**: repositories, datasources, services (APIs)
+- **presentation/**: ViewModels and UI components
+- **di/**: Koin dependency injection modules
 
 ---
 
-## 🔌 第二章：配置 Kotlin Multiplatform 模块
+## 🔌 Chapter 2: Configuring the Multiplatform Module
 
-### 1. 支持平台
+### 1. Target Platforms
 
 ```kotlin
 kotlin {
@@ -52,11 +53,11 @@ kotlin {
     iosX64()
     iosArm64()
     iosSimulatorArm64()
-    // wasmJs() ← 本项目暂不启用 Web
+    // wasmJs() ← Web not enabled yet
 }
 ```
 
-### 2. KMP 必备依赖
+### 2. Common Dependencies
 
 ```kotlin
 commonMain.dependencies {
@@ -75,7 +76,7 @@ commonMain.dependencies {
 }
 ```
 
-### 3. Android/iOS 特定实现
+### 3. Platform-Specific Dependencies
 
 ```kotlin
 androidMain.dependencies {
@@ -94,19 +95,18 @@ iosMain.dependencies {
 
 ---
 
-## 🌐 第三章：接入 Google Books API
+## 🌐 Chapter 3: Integrating Google Books API
 
-使用 [Google Books API](https://developers.google.com/books) 构建网络服务层。
+We use the [Google Books API](https://developers.google.com/books) to build a network service layer:
 
-- 使用 `Ktor` 构建 `BookService`
-- 使用 `Result` 封装成功/失败状态
-- 通过 `BookRepository` 调用远程或本地数据
+- Implement `BookService` using `Ktor`
+- Access remote or local data via `BookRepository`
 
 ---
 
-## 💾 第四章：SQLDelight 多平台持久化
+## 💾 Chapter 4: Multiplatform Persistence with SQLDelight
 
-### 1. 配置数据库
+### 1. Database Setup
 
 ```kotlin
 sqldelight {
@@ -118,10 +118,10 @@ sqldelight {
 }
 ```
 
-### 2. 数据库 Driver
+### 2. Platform-Specific Drivers
 
-- Android 使用 `AndroidSqliteDriver`
-- iOS 使用 `NativeSqliteDriver`
+- Android uses `AndroidSqliteDriver`
+- iOS uses `NativeSqliteDriver`
 
 ```kotlin
 expect class DatabaseDriverFactory {
@@ -131,9 +131,9 @@ expect class DatabaseDriverFactory {
 
 ---
 
-## 🧠 第五章：构建 ViewModel 与状态管理
+## 🧠 Chapter 5: ViewModel & State Management
 
-### 1. ViewModel 示例
+### 1. ViewModel Example
 
 ```kotlin
 class ListingViewModel(
@@ -145,7 +145,7 @@ class ListingViewModel(
 }
 ```
 
-### 2. 依赖注入
+### 2. Dependency Injection with Koin
 
 ```kotlin
 val viewModelModule = module {
@@ -157,11 +157,11 @@ val viewModelModule = module {
 
 ---
 
-## 🎨 第六章：使用 Compose 构建 UI
+## 🎨 Chapter 6: Building UI with Compose
 
 ### common:
 
-- navigation 提供屏幕导航（多平台）
+- navigation: navigation-compose
 
 ```kotlin
 @Composable
@@ -170,32 +170,33 @@ fun App() {
     MainScreen(navController = navController)
 }
 ```
+
 ### android:
 
-- 在MainActivity添加App()
+- Add App() in MainActivity
 
 ### iOS:
 
-- 使用 SwiftUI 嵌套 `UIViewControllerRepresentable` 调用 Kotlin UI
+- Uses SwiftUI with `UIViewControllerRepresentable` to host Kotlin UI
 
 ---
 
-## 🔁 第七章：数据同步策略
+## 🔁 Chapter 7: Data Synchronization Strategy
 
-1. 首次启动优先从本地 DB 加载
-2. 无数据时拉取远程并缓存
-3. 强制刷新覆盖缓存
-
----
-
-## 🧪 第八章：测试
-
-- 手动实现 `FakeBookService`
-- 单元测试 `BookRepository` 和 `UseCase`
+1. Load from local database on first launch
+2. If empty, fetch from remote and cache locally
+3. Manual refresh will override the cache
 
 ---
 
-## 🚀 第九章：构建与部署
+## 🧪 Chapter 8: Testing
+
+- Manually implement `FakeBookService`
+- Write unit tests for `BookRepository` and `UseCases`
+
+---
+
+## 🚀 Chapter 9: Build & Deployment
 
 ### Android:
 
@@ -213,22 +214,22 @@ open iosApp.xcworkspace
 
 ---
 
-## 🪤 第十章：踩坑记录
+## 🪤 Chapter 10: Lessons Learned
 
-- wasmJs 支持还需等待和完善
-
----
-
-## 📌 结语：下一步计划
-
-- 支持Web（wasmJs）
+- dependencies version management
 
 ---
 
-本教程同步开源于：[https://github.com/logosmjt/books-kmp](https://github.com/logosmjt/books-kmp)
+## 📌 What's Next
 
-如果你觉得这个 Bootcamp 有帮助，欢迎点个 ⭐ Star、提个 Issue 或 PR！
+- wasmJs support
 
-💬 有任何问题，也欢迎留言讨论或通过 issue 与我交流。
+---
+
+This tutorial is open-sourced at: [https://github.com/logosmjt/books-kmp](https://github.com/logosmjt/books-kmp)
+
+If you find this Bootcamp helpful, please ⭐ star the repo, submit issues, or send a PR!
+
+💬 Feel free to start a discussion or ask questions via issues.
 
 Happy Multiplatform Coding! 🚀
